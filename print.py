@@ -55,10 +55,40 @@ class Print(Resource):
         finally:
             mutex.release()
             pass
+
+
+class Eenmaligen(Resource):
+    def post(self):
+        mutex.acquire()
+        try:
+            content = request.json
+            if content == None:
+                return {'status': 'error', 'error': 'No Content'}
+            
+            p.set(width=4, height=4)
+            p.text("VR")
+            p.set(width=2, height=2)
+            p.text(content['eenmaligenNummer']+"\n")
+            p.text(content['naam'] +"\n")
+            if content['typeVoeding'] is not None: 
+                if content['typeVoeding'] != "gewoon": 
+                    p.set(align='right',width=2, height=2)
+                p.text(content['typeVoeding']+"\n")
+                if content['typeVoeding'] != "gewoon": 
+                    p.set(align='left',width=2, height=2)
+            if content['grootte'] is not None: 
+                p.text(content['grootte']+"\n")
+            p.cut()
+            return {'status': 'ok'}
+        except:
+            return {'status': 'error'}
+        finally:
+            mutex.release()
+            pass
         
 
-        
 api.add_resource(Print, '/print')
+api.add_resource(Eenmaligen, '/eenmaligen')
 
 if __name__ == '__main__':
      app.run(port='8080')
