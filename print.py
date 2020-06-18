@@ -24,12 +24,17 @@ class Print(Resource):
             content = request.json
             if content == None:
                 return {'status': 'error', 'error': 'No Content'}
-            
-            p.set(width=4, height=4)
-            p.text(str(content['ticketCount'])+"\n")
+            if content['ticketCount'] is not None: 
+                p.set(width=4, height=4)
+                p.text(str(content['ticketCount'])+"\n")
+            if content['printType'] is not None and content['printType'] != "Gewoon": 
+                p.set(width=2, height=2)
+                p.text(str(content['printType'])+"\n")
             p.set(width=2, height=2)
-            p.text(content['doelgroepnummer']+"\n")
-            p.text(content['naam'] + " " + content['voornaam']+"\n")
+            if content['doelgroepnummer'] is not None: 
+                p.text(content['doelgroepnummer']+"\n")
+            if content['naam'] is not None and content['voornaam'] is not None: 
+                p.text(content['naam'] + " " + content['voornaam']+"\n")
             if content['typeVoeding'] is not None: 
                 if content['typeVoeding'] != "gewoon": 
                     p.set(align='right',width=2, height=2)
