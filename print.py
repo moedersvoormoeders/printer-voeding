@@ -27,7 +27,7 @@ class Print(Resource):
             if 'ticketCount' in content and content['printType'] is not None: 
                 p.set(width=4, height=4)
                 p.text(str(content['ticketCount'])+"\n")
-            if 'printType' in contend and content['printType'] is not None and content['printType'] != "Gewoon": 
+            if 'printType' in content and content['printType'] is not None and content['printType'] != "Gewoon": 
                 p.set(width=4, height=4)
                 p.text(str(content['printType'])+"\n")
             if 'doelgroepnummer' in content and content['doelgroepnummer'] is not None: 
