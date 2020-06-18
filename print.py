@@ -30,9 +30,10 @@ class Print(Resource):
             if content['printType'] is not None and content['printType'] != "Gewoon": 
                 p.set(width=2, height=2)
                 p.text(str(content['printType'])+"\n")
-            p.set(width=2, height=2)
             if content['doelgroepnummer'] is not None: 
+                p.set(width=4, height=4)
                 p.text(content['doelgroepnummer']+"\n")
+            p.set(width=2, height=2)
             if content['naam'] is not None and content['voornaam'] is not None: 
                 p.text(content['naam'] + " " + content['voornaam']+"\n")
             if content['typeVoeding'] is not None: 
