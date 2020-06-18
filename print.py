@@ -24,31 +24,31 @@ class Print(Resource):
             content = request.json
             if content == None:
                 return {'status': 'error', 'error': 'No Content'}
-            if content['ticketCount'] is not None: 
+            if 'ticketCount' in content and content['printType'] is not None: 
                 p.set(width=4, height=4)
                 p.text(str(content['ticketCount'])+"\n")
-            if content['printType'] is not None and content['printType'] != "Gewoon": 
-                p.set(width=2, height=2)
+            if 'printType' in contend and content['printType'] is not None and content['printType'] != "Gewoon": 
+                p.set(width=4, height=4)
                 p.text(str(content['printType'])+"\n")
-            if content['doelgroepnummer'] is not None: 
+            if 'doelgroepnummer' in content and content['doelgroepnummer'] is not None: 
                 p.set(width=4, height=4)
                 p.text(content['doelgroepnummer']+"\n")
             p.set(width=2, height=2)
             if content['naam'] is not None and content['voornaam'] is not None: 
                 p.text(content['naam'] + " " + content['voornaam']+"\n")
-            if content['typeVoeding'] is not None: 
+            if 'typeVoeding' in content and content['typeVoeding'] is not None: 
                 if content['typeVoeding'] != "gewoon": 
                     p.set(align='right',width=2, height=2)
                 p.text(content['typeVoeding']+"\n")
                 if content['typeVoeding'] != "gewoon": 
                     p.set(align='left',width=2, height=2)
-            if content['code'] is not None: 
+            if 'code' in content and content['code'] is not None: 
                 p.text(content['code']+"\n")
-            if content['volwassenen'] is not None: 
+            if 'volwassenen' in content and content['volwassenen'] is not None: 
                 p.text("Volwassenen: " + str(content['volwassenen'])+"\n")
-            if content['kinderen'] is not None: 
+            if 'kinderen' in content and content['kinderen'] is not None: 
                 p.text("Kinderen: " + str(content['kinderen'])+"\n")
-            if content['specialeVoeding'] is not None: 
+            if 'specialeVoeding' in content and content['specialeVoeding'] is not None: 
                 p.text("\n"+content['specialeVoeding']+"\n")
             if content['needsVerjaardag']: 
                 p.text("\nVERJAARDAG\n")
@@ -76,13 +76,13 @@ class Eenmaligen(Resource):
             p.set(width=2, height=2)
             p.text(content['eenmaligenNummer']+"\n")
             p.text(content['naam'] +"\n")
-            if content['typeVoeding'] is not None: 
+            if 'typeVoeding' in content and content['typeVoeding'] is not None: 
                 if content['typeVoeding'] != "gewoon": 
                     p.set(align='right',width=2, height=2)
                 p.text(content['typeVoeding']+"\n")
                 if content['typeVoeding'] != "gewoon": 
                     p.set(align='left',width=2, height=2)
-            if content['grootte'] is not None: 
+            if 'grootte' in content and content['grootte'] is not None: 
                 p.text(content['grootte']+"\n")
             p.cut()
             return {'status': 'ok'}
