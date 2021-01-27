@@ -8,7 +8,7 @@ from flask_cors import CORS
 import json
 
 import logging
-logging.basicConfig(filename='voeding.log', encoding='utf-8', level=logging.DEBUG)
+logging.basicConfig(filename='voeding.log', level=logging.DEBUG)
 
 from threading import Lock
 
