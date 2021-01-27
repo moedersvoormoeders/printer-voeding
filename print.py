@@ -7,6 +7,9 @@ from flask_jsonpify import jsonify
 from flask_cors import CORS
 import json
 
+import logging
+logging.basicConfig(filename='voeding.log', encoding='utf-8', level=logging.DEBUG)
+
 from threading import Lock
 
 mutex = Lock()
@@ -55,6 +58,8 @@ class Print(Resource):
             if content['needsMelkpoeder']: 
                 p.text("\MELKPOEDER\n")
             p.cut()
+
+            logging.info(content['doelgroepnummer'] + " " + content['typeVoeding'])
             return {'status': 'ok'}
         except:
             return {'status': 'error'}
