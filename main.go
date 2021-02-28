@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/labstack/echo/v4/middleware"
+
 	"github.com/labstack/echo/v4"
 	"github.com/mect/go-escpos"
 )
@@ -14,6 +16,9 @@ var printMutex = sync.Mutex{}
 
 func main() {
 	e := echo.New()
+
+	e.Use(middleware.CORS())
+
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Mvm Voeding Printer")
 	})
