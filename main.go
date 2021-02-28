@@ -40,6 +40,7 @@ func handleVoedingPrint(c echo.Context) error {
 		log.Println(err)
 		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": err.Error()})
 	}
+	defer p.Close()
 	p.Init()
 
 	p.Size(4, 4)
