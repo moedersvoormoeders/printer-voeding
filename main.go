@@ -35,7 +35,7 @@ func handleVoedingPrint(c echo.Context) error {
 
 	printMutex.Lock()
 	defer printMutex.Unlock()
-	p, err := escpos.NewUSBPrinter(0, 0) // auto discover USB
+	p, err := escpos.NewUSBPrinterByPath("") // auto discover USB
 	if err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": err.Error()})
@@ -89,7 +89,7 @@ func handleEenmaligenPrint(c echo.Context) error {
 
 	printMutex.Lock()
 	defer printMutex.Unlock()
-	p, err := escpos.NewUSBPrinter(0, 0) // auto discover USB
+	p, err := escpos.NewUSBPrinterByPath("") // auto discover USB
 	if err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": err.Error()})
