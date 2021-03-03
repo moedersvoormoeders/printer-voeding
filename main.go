@@ -34,6 +34,7 @@ func handleVoedingPrint(c echo.Context) error {
 	c.Bind(&data)
 
 	printMutex.Lock()
+
 	defer printMutex.Unlock()
 	p, err := escpos.NewUSBPrinterByPath("") // auto discover USB
 	if err != nil {
@@ -41,7 +42,12 @@ func handleVoedingPrint(c echo.Context) error {
 		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": err.Error()})
 	}
 	defer p.Close()
-	p.Init()
+
+	err = p.Init()
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": "Printer reageert niet, check status en papier"})
+	}
 
 	p.Size(4, 4)
 	p.PrintLn(fmt.Sprintf("%d", data.TicketCount))
@@ -94,7 +100,12 @@ func handleEenmaligenPrint(c echo.Context) error {
 		log.Println(err)
 		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": err.Error()})
 	}
-	p.Init()
+
+	err = p.Init()
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": "Printer reageert niet, check status en papier"})
+	}
 
 	p.Size(4, 4)
 	p.PrintLn("VR")
