@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"sync"
 
 	"github.com/labstack/echo/v4/middleware"
@@ -48,7 +49,7 @@ func handleVoedingPrint(c echo.Context) error {
 		log.Println(err)
 		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": "Printer reageert niet, check status en papier"})
 	}
-	
+
 	p.Barcode(strings.Replace(data.Doelgroepnummer, "MVM", "", -1), escpos.BarcodeTypeCODE39)
 	p.PrintLn("")
 	p.PrintLn("")
