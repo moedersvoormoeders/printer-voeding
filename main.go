@@ -48,6 +48,12 @@ func handleVoedingPrint(c echo.Context) error {
 		log.Println(err)
 		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": "Printer reageert niet, check status en papier"})
 	}
+	
+	p.Barcode(strings.Replace(data.Doelgroepnummer, "MVM", "", -1), escpos.BarcodeTypeCODE39)
+	p.PrintLn("")
+	p.PrintLn("")
+
+	p.Align(escpos.AlignLeft)
 
 	p.Size(4, 4)
 	p.PrintLn(fmt.Sprintf("%d", data.TicketCount))
