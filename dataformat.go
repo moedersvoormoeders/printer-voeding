@@ -21,3 +21,22 @@ type VoedingRequestEenmaligen struct {
 	TypeVoeding      string `json:"typeVoeding"`
 	Grootte          string `json:"grootte"`
 }
+
+type SinterklaasRequest struct {
+	// fun fact: we designed these first to be seperate calls
+	Speelgoed struct {
+		MVMNummer string `json:"mvmNummer"`
+		Naam      string `json:"naam"`
+		Paketten  []struct {
+			Naam      string  `json:"naam"`
+			Geslacht  string  `json:"geslacht"`
+			Leeftijd  float64 `json:"leeftijd"` // float64 really!
+			Opmerking string  `json:"opmerking"`
+		} `json:"paketten"`
+	} `json:speelgoed`
+	Snoep struct {
+		MVMNummer string `json:"mvmNummer"`
+		Naam      string `json:"naam"`
+		Personen  int    `json:"personen"`
+	} `json:snoep`
+}

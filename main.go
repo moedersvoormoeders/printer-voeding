@@ -26,6 +26,7 @@ func main() {
 
 	e.POST("/print", handleVoedingPrint)
 	e.POST("/eenmaligen", handleEenmaligenPrint)
+	e.POST("/sinterklaas", handleSinterklaasPrint)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
@@ -134,6 +135,73 @@ func handleEenmaligenPrint(c echo.Context) error {
 	p.End()
 
 	log.Println(data.EenmaligenNummer, data.TypeVoeding)
+
+	return c.JSON(http.StatusOK, echo.Map{"status": "ok"})
+}
+
+func handleSinterklaasPrint(c echo.Context) error {
+	data := SinterklaasRequest{}
+	c.Bind(&data)
+
+	printMutex.Lock()
+	defer printMutex.Unlock()
+	p, err := escpos.NewUSBPrinterByPath("") // auto discover USB
+	defer p.Close()
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": err.Error()})
+	}
+
+	err = p.Init()
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": "Printer reageert niet, check status en papier"})
+	}
+
+	// p.Size(3, 3)
+	// p.PrintLn(data.Speelgoed.MVMNummer)
+
+	// p.Size(2, 2)
+	// p.PrintLn(data.Speelgoed.Naam)
+	// p.PrintLn("")
+
+	// p.PrintLn("Sinterklaas")
+
+	// for _, entry := range data.Speelgoed.Paketten {
+	// 	p.PrintLn("")
+	// 	p.PrintLn("----------------")
+	// 	p.PrintLn("")
+
+	// 	p.PrintLn(entry.Naam)
+	// 	p.PrintLn(entry.Geslacht)
+	// 	p.PrintLn(fmt.Sprintf("%.1f jaar", entry.Leeftijd))
+	// 	p.PrintLn(entry.Opmerking)
+
+	// 	p.PrintLn("")
+	// 	p.PrintLn("----------------")
+	// 	p.PrintLn("")
+	// }
+
+	// p.Cut()
+
+	p.Size(3, 3)
+	p.PrintLn(data.Snoep.MVMNummer)
+
+	p.Size(2, 2)
+	p.PrintLn(data.Snoep.Naam)
+	p.PrintLn("")
+
+	p.PrintLn("Sinterklaas Snoep")
+
+	if data.Snoep.Personen > 4 {
+		p.PrintLn("Groot pakket")
+	} else {
+		p.PrintLn("Klein pakket")
+	}
+
+	p.Cut()
+
+	p.End()
 
 	return c.JSON(http.StatusOK, echo.Map{"status": "ok"})
 }
