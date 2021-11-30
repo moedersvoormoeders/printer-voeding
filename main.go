@@ -192,12 +192,8 @@ func handleSinterklaasPrint(c echo.Context) error {
 	p.PrintLn("")
 
 	p.PrintLn("Sinterklaas Snoep")
-
-	if data.Snoep.Personen > 4 {
-		p.PrintLn("Groot pakket")
-	} else {
-		p.PrintLn("Klein pakket")
-	}
+	p.PrintLn("")
+	p.PrintLn(fmt.Sprintf("%d personen", data.Snoep.Personen))
 
 	p.Cut()
 
