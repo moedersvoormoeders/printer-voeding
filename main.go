@@ -39,11 +39,11 @@ func handleVoedingPrint(c echo.Context) error {
 
 	defer printMutex.Unlock()
 	p, err := escpos.NewUSBPrinterByPath("") // auto discover USB
-	defer p.Close()
 	if err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": err.Error()})
 	}
+	defer p.Close()
 
 	err = p.Init()
 	if err != nil {
@@ -51,9 +51,11 @@ func handleVoedingPrint(c echo.Context) error {
 		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": "Printer reageert niet, check status en papier"})
 	}
 
-	p.Barcode(strings.Replace(data.Doelgroepnummer, "MVM", "", -1), escpos.BarcodeTypeCODE39)
-	p.PrintLn("")
-	p.PrintLn("")
+	if data.Doelgroepnummer != "" {
+		p.Barcode(strings.Replace(data.Doelgroepnummer, "MVM", "", -1), escpos.BarcodeTypeCODE39)
+		p.PrintLn("")
+		p.PrintLn("")
+	}
 
 	p.Align(escpos.AlignLeft)
 
@@ -64,7 +66,12 @@ func handleVoedingPrint(c echo.Context) error {
 		p.PrintLn(data.PrintType)
 	}
 
-	p.PrintLn(data.Doelgroepnummer)
+	if data.Doelgroepnummer != "" {
+		p.PrintLn(data.Doelgroepnummer)
+	}
+	if data.EenmaligenNummer != "" {
+		p.PrintLn(data.EenmaligenNummer)
+	}
 	p.Size(2, 2)
 	p.PrintLn(fmt.Sprintf("%s %s", data.Voornaam, data.Naam))
 	if data.TypeVoeding != "gewoon" {
