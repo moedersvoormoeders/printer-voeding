@@ -153,11 +153,11 @@ func handleSinterklaasPrint(c echo.Context) error {
 	printMutex.Lock()
 	defer printMutex.Unlock()
 	p, err := escpos.NewUSBPrinterByPath("") // auto discover USB
-	defer p.Close()
 	if err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": err.Error()})
 	}
+	defer p.Close()
 
 	err = p.Init()
 	if err != nil {
@@ -199,6 +199,7 @@ func handleSinterklaasPrint(c echo.Context) error {
 	}
 
 	p.Cut()
+	p.End()
 
 	// p.Size(3, 3)
 	// p.PrintLn(data.Snoep.MVMNummer)
