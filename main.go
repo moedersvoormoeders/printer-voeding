@@ -165,7 +165,11 @@ func handleSinterklaasPrint(c echo.Context) error {
 		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": "Printer reageert niet, check status en papier"})
 	}
 
+	p.Size(4, 4)
+	p.PrintLn(fmt.Sprintf("%d", data.Speelgoed.VolgNummer))
+
 	p.Size(3, 3)
+	p.PrintLn("")
 	p.PrintLn(data.Speelgoed.MVMNummer)
 
 	log.Printf("Speelgoed voor %s\n", data.Speelgoed.MVMNummer)
