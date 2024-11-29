@@ -168,7 +168,7 @@ func handleSinterklaasPrint(c echo.Context) error {
 	p.Size(4, 4)
 	p.PrintLn(fmt.Sprintf("%d", data.Speelgoed.VolgNummer))
 
-	p.Size(3, 3)
+	p.Size(4, 4)
 	p.PrintLn("")
 	p.PrintLn(data.Speelgoed.MVMNummer)
 
