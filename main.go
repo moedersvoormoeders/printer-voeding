@@ -27,6 +27,7 @@ func main() {
 	e.POST("/print", handleVoedingPrint)
 	e.POST("/eenmaligen", handleEenmaligenPrint)
 	e.POST("/sinterklaas", handleSinterklaasPrint)
+	e.POST("/print-markt", handleMarktPrint)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
@@ -220,6 +221,65 @@ func handleSinterklaasPrint(c echo.Context) error {
 	// p.Cut()
 
 	// p.End()
+
+	return c.JSON(http.StatusOK, echo.Map{"status": "ok"})
+}
+
+func handleMarktPrint(c echo.Context) error {
+	data := MarktRequest{}
+	c.Bind(&data)
+
+	printMutex.Lock()
+
+	defer printMutex.Unlock()
+	p, err := escpos.NewUSBPrinterByPath("") // auto discover USB
+	defer p.Close()
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": err.Error()})
+	}
+
+	err = p.Init()
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusOK, echo.Map{"status": "error", "error": "Printer reageert niet, check status en papier"})
+	}
+
+	p.Align(escpos.AlignLeft)
+	p.Size(2, 2)
+	if data.MVMNummer != "" {
+		p.PrintLn("MVM" + data.MVMNummer)
+	}
+	p.Size(2, 2)
+	p.PrintLn("")
+	p.PrintLn(data.Naam)
+	p.Size(2, 1)
+	p.PrintLn(data.Beschrijving)
+	p.Feed(2)
+
+	for _, entry := range data.Kinderen {
+		p.Size(1, 1)
+		p.PrintLn("==========================================")
+		p.Size(2, 2)
+
+		if entry.Naam != "" {
+			p.Size(1, 1)
+			p.PrintLn(entry.Naam)
+			p.Size(2, 1)
+			p.Print(entry.Geslacht)
+			p.Print(" ")
+			p.PrintLn(fmt.Sprintf("%d jaar", entry.Leeftijd))
+		}
+	}
+
+	p.Size(1, 1)
+	p.PrintLn("==========================================")
+	p.AztecViaImage(data.Barcode, 400, 400)
+
+	p.Feed(2)
+
+	p.Cut()
+	p.End()
 
 	return c.JSON(http.StatusOK, echo.Map{"status": "ok"})
 }
